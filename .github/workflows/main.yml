@@ -23,7 +23,7 @@
 
 #     # Steps represent a sequence of tasks that will be executed as part of the job
 #     steps:
-#       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#       # Checks-outs your repository under $GITHUB_WORKSPACE, so your job can access it
 #       - uses: actions/checkout@v2
 
 #       # Setup virtual env, install dependencies
@@ -75,7 +75,7 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      # Checks-outs your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -93,9 +93,9 @@ jobs:
     needs: build
     
     steps:
-      - name: Kill all running containers
-        run: docker kill $(docker ps -q)
+      - name: Stop and remove existing container
+        run: docker stop rpi-app && docker rm rpi-app || true
         
       - name: Run the docker image
-        run: docker run -d -p4000:4000 rpi-cd-tutorial:${{ needs.build.outputs.tag_name }}
+        run: docker run --name rpi-app -d -p 4000:4000 rpi-cd-tutorial:${{ needs.build.outputs.tag_name }}
 
